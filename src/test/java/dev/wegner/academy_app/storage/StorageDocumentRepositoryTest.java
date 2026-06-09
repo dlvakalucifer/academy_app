@@ -15,8 +15,8 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 @DataJpaTest
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-class StorageDocumentRepositoryTest {
-
+class StorageDocumentRepositoryTest
+{
     @MockitoBean
     private CacheManager cacheManager;
 
@@ -27,18 +27,18 @@ class StorageDocumentRepositoryTest {
     private StorageDocumentRepository documentRepository;
 
     @Test
-    void shouldFindDocumentsByStudentId() {
+    void shouldFindDocumentsByStudentId()
+    {
         var student = studentRepository.save(Student.create("Stefan", "Wegner", "stefan@example.com"));
 
         documentRepository.save(StorageDocument.create("a", "cv.pdf", "application/pdf", 100, student));
-
         documentRepository.save(StorageDocument.create("a", "zeugnis.pdf", "application/pdf", 100, student));
 
         var documents = documentRepository.findByStudentId(student.getId());
 
         assertThat(documents).hasSize(2);
-
-        assertThat(documents).extracting(StorageDocument::getFileName).containsExactlyInAnyOrder("cv.pdf", "zeugnis.pdf");
+        assertThat(documents).extracting(StorageDocument::getFileName)
+                .containsExactlyInAnyOrder("cv.pdf", "zeugnis.pdf");
     }
 }
 

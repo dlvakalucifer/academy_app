@@ -12,8 +12,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class StudentServiceTest {
-
+class StudentServiceTest
+{
     @Mock
     private StudentRepository repository;
 
@@ -21,8 +21,8 @@ class StudentServiceTest {
     private StudentService service;
 
     @Test
-    void shouldLoadStudents() {
-
+    void shouldLoadStudents()
+    {
         when(repository.findAll())
                 .thenReturn(List.of());
 

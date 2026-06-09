@@ -7,14 +7,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cache.annotation.EnableCaching;
 
-@EnableConfigurationProperties({StorageProperties.class, JwtProperties.class})
+@EnableConfigurationProperties({ StorageProperties.class, JwtProperties.class })
 @EnableCaching
 @SpringBootApplication
-public class AcademyAppApplication {
-
-    public static void main(String[] args) {
+public class AcademyAppApplication
+{
+    public static void main( String[] args )
+    {
         SpringApplication.run(AcademyAppApplication.class, args);
     }
-
 }
 

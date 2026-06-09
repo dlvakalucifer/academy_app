@@ -19,8 +19,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(AuthenticationController.class)
 @Import(SecurityConfiguration.class)
-class AuthenticationControllerTest {
-
+class AuthenticationControllerTest
+{
     @MockitoBean
     private CacheManager cacheManager;
 
@@ -34,15 +34,18 @@ class AuthenticationControllerTest {
     private MockMvc mvc;
 
     @Test
-    void shouldReturnToken() throws Exception {
-
+    void shouldReturnToken() throws Exception
+    {
         when(jwtService.generateToken("admin")).thenReturn("jwt-token");
 
-        mvc.perform(post("/auth/login").contentType(MediaType.APPLICATION_JSON).content("""
-                {
-                   "username":"admin",
-                   "password":"academy"
-                }
-                """)).andExpect(status().isOk()).andExpect(jsonPath("$.token").value("jwt-token"));
+        mvc.perform(post("/auth/login").contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                   "username":"admin",
+                                   "password":"academy"
+                                }
+                                """))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.token").value("jwt-token"));
     }
 }

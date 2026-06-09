@@ -6,15 +6,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/info")
-public class AcademyInfoController {
-    private AcademyInfoProvider academyInfoProvider;
+public class AcademyInfoController
+{
+    private final AcademyInfoProvider academyInfoProvider;
 
-    public AcademyInfoController(AcademyInfoProvider academyInfoProvider) {
+    public AcademyInfoController( AcademyInfoProvider academyInfoProvider )
+    {
         this.academyInfoProvider = academyInfoProvider;
     }
 
     @GetMapping
-    public AcademyInfo getAcademyInfo() {
+    public AcademyInfo getAcademyInfo()
+    {
         return academyInfoProvider.getAcademyInfo();
     }
 }

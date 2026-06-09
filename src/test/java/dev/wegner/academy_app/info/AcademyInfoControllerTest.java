@@ -16,9 +16,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(AcademyInfoController.class)
-class AcademyInfoControllerTest {
-
-
+class AcademyInfoControllerTest
+{
     @MockitoBean
     private AcademyInfoProvider academyInfoProvider;
 
@@ -38,8 +37,8 @@ class AcademyInfoControllerTest {
     private MockMvc mvc;
 
     @Test
-    void shouldReturnAcademyInfo() throws Exception {
-
+    void shouldReturnAcademyInfo() throws Exception
+    {
         when(academyInfoProvider.getAcademyInfo()).thenReturn(new AcademyInfo("academy_app", "1.0.0", "21", "4", "PostgreSQL", "MinIO", "Redis"));
 
         mvc.perform(get("/info"))

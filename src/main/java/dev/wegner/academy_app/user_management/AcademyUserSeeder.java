@@ -7,25 +7,30 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Profile("local")
-public class AcademyUserSeeder implements CommandLineRunner {
-
+public class AcademyUserSeeder implements CommandLineRunner
+{
     private final AcademyUserRepository repository;
     private final PasswordEncoder passwordEncoder;
 
-    public AcademyUserSeeder(AcademyUserRepository repository, PasswordEncoder passwordEncoder) {
+    public AcademyUserSeeder( AcademyUserRepository repository, PasswordEncoder passwordEncoder )
+    {
         this.repository = repository;
         this.passwordEncoder = passwordEncoder;
     }
 
     @Override
-    public void run(String... args) {
+    public void run( String... args )
+    {
         createUserIfMissing("admin", "academy", AcademyRole.ADMIN);
         createUserIfMissing("lecturer", "academy", AcademyRole.LECTURER);
         createUserIfMissing("student", "academy", AcademyRole.STUDENT);
     }
 
-    private void createUserIfMissing(String username, String password, AcademyRole role) {
-        if (repository.findByUsername(username).isPresent()) {
+    private void createUserIfMissing( String username, String password, AcademyRole role )
+    {
+        if (repository.findByUsername(username)
+                .isPresent())
+        {
             return;
         }
 

@@ -2,12 +2,14 @@ package dev.wegner.academy_app.user_management;
 
 import jakarta.persistence.*;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 @Entity
 @Table(name = AcademyUser.TABLE_NAME)
-public class AcademyUser implements Serializable {
-
+public class AcademyUser implements Serializable
+{
+    @Serial
     private static final long serialVersionUID = 2L;
 
     public static final String TABLE_NAME = "academy_user";
@@ -36,38 +38,46 @@ public class AcademyUser implements Serializable {
     @Column(name = ROLE_COLUMN, nullable = false)
     private AcademyRole role;
 
-    protected AcademyUser() {
+    protected AcademyUser()
+    {
         // JPA
     }
 
-    private AcademyUser(String username, String passwordHash, boolean isEnabled, AcademyRole role) {
+    private AcademyUser( String username, String passwordHash, boolean isEnabled, AcademyRole role )
+    {
         this.username = username;
         this.passwordHash = passwordHash;
         this.isEnabled = isEnabled;
         this.role = role;
     }
 
-    public static AcademyUser create(String username, String passwordHash, boolean isEnabled, AcademyRole role) {
+    public static AcademyUser create( String username, String passwordHash, boolean isEnabled, AcademyRole role )
+    {
         return new AcademyUser(username, passwordHash, isEnabled, role);
     }
 
-    public Long getId() {
+    public Long getId()
+    {
         return id;
     }
 
-    public String getUsername() {
+    public String getUsername()
+    {
         return username;
     }
 
-    public String getPasswordHash() {
+    public String getPasswordHash()
+    {
         return passwordHash;
     }
 
-    public boolean isEnabled() {
+    public boolean isEnabled()
+    {
         return isEnabled;
     }
 
-    public AcademyRole getRole() {
+    public AcademyRole getRole()
+    {
         return role;
     }
 }

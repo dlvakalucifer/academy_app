@@ -6,9 +6,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -16,8 +16,8 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class AcademyUserDetailsServiceTest {
-
+class AcademyUserDetailsServiceTest
+{
     @Mock
     private AcademyUserRepository repository;
 
@@ -25,30 +25,32 @@ class AcademyUserDetailsServiceTest {
     private AcademyUserDetailsService service;
 
     @Test
-    void shouldLoadUser() {
-
-        AcademyUser academyUser = AcademyUser.create("admin", "hash", true, AcademyRole.ADMIN);
+    void shouldLoadUser()
+    {
+        var academyUser = AcademyUser.create("admin", "hash", true, AcademyRole.ADMIN);
 
         when(repository.findByUsername("admin")).thenReturn(Optional.of(academyUser));
 
-        UserDetails result = service.loadUserByUsername("admin");
+        var result = service.loadUserByUsername("admin");
 
         assertThat(result.getUsername()).isEqualTo("admin");
-
         assertThat(result.getPassword()).isEqualTo("hash");
-
         assertThat(result.getAuthorities()).hasSize(1);
 
-        assertThat(result.getAuthorities().iterator().next().getAuthority()).isEqualTo("ROLE_ADMIN");
+        assertThat(result.getAuthorities()
+                .iterator()
+                .next()
+                .getAuthority()).isEqualTo("ROLE_ADMIN");
         //ODER
-        assertThat(result.getAuthorities()).anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
+        assertThat(result.getAuthorities()).anyMatch(authority -> Objects.equals(authority.getAuthority(), "ROLE_ADMIN"));
         //ODER
-        assertThat(result.getAuthorities()).map(GrantedAuthority::getAuthority).containsExactly("ROLE_ADMIN");
+        assertThat(result.getAuthorities()).map(GrantedAuthority::getAuthority)
+                .containsExactly("ROLE_ADMIN");
     }
 
     @Test
-    void shouldThrowExceptionWhenUserNotFound() {
-
+    void shouldThrowExceptionWhenUserNotFound()
+    {
         when(repository.findByUsername("unknown")).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> service.loadUserByUsername("unknown")).isInstanceOf(UsernameNotFoundException.class);

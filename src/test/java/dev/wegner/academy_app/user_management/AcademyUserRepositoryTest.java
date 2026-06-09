@@ -16,8 +16,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-class AcademyUserRepositoryTest {
-
+class AcademyUserRepositoryTest
+{
     @MockitoBean
     private CacheManager cacheManager;
 
@@ -25,22 +25,22 @@ class AcademyUserRepositoryTest {
     private AcademyUserRepository repository;
 
     @Test
-    void shouldFindUserByUsername() {
-
-        AcademyUser user = AcademyUser.create("admin", "hash", true, AcademyRole.ADMIN);
+    void shouldFindUserByUsername()
+    {
+        var user = AcademyUser.create("admin", "hash", true, AcademyRole.ADMIN);
 
         repository.save(user);
 
         Optional<AcademyUser> result = repository.findByUsername("admin");
 
         assertThat(result).isPresent();
-
-        assertThat(result.get().getRole()).isEqualTo(AcademyRole.ADMIN);
+        assertThat(result.get()
+                .getRole()).isEqualTo(AcademyRole.ADMIN);
     }
 
     @Test
-    void shouldReturnEmptyWhenUserNotFound() {
-
+    void shouldReturnEmptyWhenUserNotFound()
+    {
         Optional<AcademyUser> result = repository.findByUsername("unknown");
 
         assertThat(result).isEmpty();

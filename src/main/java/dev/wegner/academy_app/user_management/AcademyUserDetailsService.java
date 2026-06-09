@@ -13,19 +13,27 @@ import java.util.List;
  * Übersetzung von Meiner Userverwaltung zu Spring Security
  */
 @Service
-public class AcademyUserDetailsService implements UserDetailsService {
-
+public class AcademyUserDetailsService implements UserDetailsService
+{
     private final AcademyUserRepository academyUserRepository;
 
-    public AcademyUserDetailsService(AcademyUserRepository academyUserRepository) {
+    public AcademyUserDetailsService( AcademyUserRepository academyUserRepository )
+    {
         this.academyUserRepository = academyUserRepository;
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername( String username ) throws UsernameNotFoundException
+    {
+        AcademyUser academyUser = academyUserRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username));
 
-        AcademyUser academyUser = academyUserRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(username));
-
-        return User.builder().username(academyUser.getUsername()).password(academyUser.getPasswordHash()).disabled(!academyUser.isEnabled()).authorities(List.of(new SimpleGrantedAuthority("ROLE_" + academyUser.getRole().name()))).build();
+        return User.builder()
+                .username(academyUser.getUsername())
+                .password(academyUser.getPasswordHash())
+                .disabled(!academyUser.isEnabled())
+                .authorities(List.of(new SimpleGrantedAuthority("ROLE_" + academyUser.getRole()
+                        .name())))
+                .build();
     }
 }

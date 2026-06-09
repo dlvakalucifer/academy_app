@@ -15,8 +15,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(StorageDocumentController.class)
-class StorageDocumentControllerTest {
-
+class StorageDocumentControllerTest
+{
     @MockitoBean
     StorageDocumentService service;
 
@@ -30,9 +30,11 @@ class StorageDocumentControllerTest {
     MockMvc mvc;
 
     @Test
-    void shouldUploadFile() throws Exception {
+    void shouldUploadFile() throws Exception
+    {
         when(service.upload(any(), any())).thenReturn(StorageDocument.create("", "", "", 1L, Student.create("", "", "")));
 
-        mvc.perform(multipart("http://localhost:8081/storage/students/1/documents").file(new MockMultipartFile("file", "test.txt", "text/plain", "hello".getBytes()))).andExpect(status().isOk());
+        mvc.perform(multipart("http://localhost:8081/storage/students/1/documents").file(new MockMultipartFile("file", "test.txt", "text/plain", "hello".getBytes())))
+                .andExpect(status().isOk());
     }
 }

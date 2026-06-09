@@ -5,7 +5,8 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = StorageDocument.TABLE_NAME)
-public class StorageDocument {
+public class StorageDocument
+{
 
     public static final String TABLE_NAME = "storage_document";
 
@@ -37,11 +38,13 @@ public class StorageDocument {
     @JoinColumn(name = STUDENT_JOIN_COLUMN, nullable = false)
     private Student student;
 
-    protected StorageDocument() {
+    protected StorageDocument()
+    {
         // JPA
     }
 
-    private StorageDocument(String objectKey, String fileName, String contentType, long fileSize, Student student) {
+    private StorageDocument( String objectKey, String fileName, String contentType, long fileSize, Student student )
+    {
         this.objectKey = objectKey;
         this.fileName = fileName;
         this.contentType = contentType;
@@ -49,31 +52,38 @@ public class StorageDocument {
         this.student = student;
     }
 
-    public static StorageDocument create(String objectKey, String fileName, String contentType, long fileSize, Student student) {
+    public static StorageDocument create( String objectKey, String fileName, String contentType, long fileSize, Student student )
+    {
         return new StorageDocument(objectKey, fileName, contentType, fileSize, student);
     }
 
-    public Long getId() {
+    public Long getId()
+    {
         return id;
     }
 
-    public String getObjectKey() {
+    public String getObjectKey()
+    {
         return objectKey;
     }
 
-    public String getFileName() {
+    public String getFileName()
+    {
         return fileName;
     }
 
-    public String getContentType() {
+    public String getContentType()
+    {
         return contentType;
     }
 
-    public long getFileSize() {
+    public long getFileSize()
+    {
         return fileSize;
     }
 
-    public Student getStudent() {
+    public Student getStudent()
+    {
         return student;
     }
 }

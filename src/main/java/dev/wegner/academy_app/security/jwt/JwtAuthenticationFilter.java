@@ -15,38 +15,46 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 @Component
-public class JwtAuthenticationFilter extends OncePerRequestFilter {
+public class JwtAuthenticationFilter extends OncePerRequestFilter
+{
 
     public static final int MINUS_KEYWORD = 7;
     private final JwtService jwtService;
     private final AcademyUserDetailsService userDetailsService;
 
-    public JwtAuthenticationFilter(JwtService jwtService, AcademyUserDetailsService userDetailsService) {
+    public JwtAuthenticationFilter( JwtService jwtService, AcademyUserDetailsService userDetailsService )
+    {
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal( HttpServletRequest request, HttpServletResponse response, FilterChain filterChain ) throws ServletException, IOException
+    {
         var authorizationHeader = request.getHeader("Authorization");
 
-        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer "))
+        {
             filterChain.doFilter(request, response);
             return;
         }
 
-        try {
+        try
+        {
             var token = authorizationHeader.substring(MINUS_KEYWORD);
             var username = jwtService.extractUsername(token);
             var user = userDetailsService.loadUserByUsername(username);
 
-            if (jwtService.isValid(token)) {
+            if (jwtService.isValid(token))
+            {
                 var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+                SecurityContextHolder.getContext()
+                        .setAuthentication(authentication);
             }
 
-        } catch (JwtException e) {
+        } catch (JwtException e)
+        {
             SecurityContextHolder.clearContext();
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;

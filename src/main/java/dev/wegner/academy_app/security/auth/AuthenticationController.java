@@ -10,18 +10,21 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/auth")
-public class AuthenticationController {
+public class AuthenticationController
+{
 
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
 
-    public AuthenticationController(AuthenticationManager authenticationManager, JwtService jwtService) {
+    public AuthenticationController( AuthenticationManager authenticationManager, JwtService jwtService )
+    {
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
     }
 
     @PostMapping("/login")
-    public LoginResponse login(@RequestBody LoginRequest request) {
+    public LoginResponse login( @RequestBody LoginRequest request )
+    {
 
         System.out.println("LOGIN ENDPOINT AUFGERUFEN");
 

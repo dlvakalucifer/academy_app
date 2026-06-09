@@ -16,7 +16,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @Import(SecurityConfiguration.class)
 @WebMvcTest(StudentController.class)
-public class StudentControllerSecurityTest {
+public class StudentControllerSecurityTest
+{
 
     @MockitoBean
     private CacheManager cacheManager;
@@ -31,18 +32,25 @@ public class StudentControllerSecurityTest {
     private MockMvc mvc;
 
     @Test
-    void shouldRejectAnonymousUser() throws Exception {
-        mvc.perform(get("/students")).andDo(print()).andExpect(status().isUnauthorized());
+    void shouldRejectAnonymousUser() throws Exception
+    {
+        mvc.perform(get("/students"))
+                .andDo(print())
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
-    void shouldAllowLecturer() throws Exception {
-        mvc.perform(get("/students").with(user("lecturer").roles("LECTURER"))).andExpect(status().isOk());
+    void shouldAllowLecturer() throws Exception
+    {
+        mvc.perform(get("/students").with(user("lecturer").roles("LECTURER")))
+                .andExpect(status().isOk());
 //        mvc.perform(get("/students").with(httpBasic("lecturer", "academy"))).andExpect(status().isOk());
     }
 
     @Test
-    void shouldRejectStudent() throws Exception {
-        mvc.perform(get("/students").with(user("student").roles("STUDENT"))).andExpect(status().isForbidden());
+    void shouldRejectStudent() throws Exception
+    {
+        mvc.perform(get("/students").with(user("student").roles("STUDENT")))
+                .andExpect(status().isForbidden());
     }
 }

@@ -4,18 +4,22 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AcademyUserService {
-
+public class AcademyUserService
+{
     private final AcademyUserRepository academyUserRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public AcademyUserService(AcademyUserRepository academyUserRepository, PasswordEncoder passwordEncoder) {
+    public AcademyUserService( AcademyUserRepository academyUserRepository, PasswordEncoder passwordEncoder )
+    {
         this.academyUserRepository = academyUserRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
-    public AcademyUser createUser(String username, String password, AcademyRole role) {
-        if (academyUserRepository.findByUsername(username).isPresent()) {
+    public AcademyUser createUser( String username, String password, AcademyRole role )
+    {
+        if (academyUserRepository.findByUsername(username)
+                .isPresent())
+        {
             throw new IllegalArgumentException("Username already exists");
         }
 
@@ -25,7 +29,9 @@ public class AcademyUserService {
         return academyUserRepository.save(user);
     }
 
-    public AcademyUser findByUsername(String username) {
-        return academyUserRepository.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("User not found: " + username));
+    public AcademyUser findByUsername( String username )
+    {
+        return academyUserRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("User not found: " + username));
     }
 }

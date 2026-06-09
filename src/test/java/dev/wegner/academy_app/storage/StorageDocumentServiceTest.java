@@ -17,8 +17,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class StorageDocumentServiceTest {
-
+class StorageDocumentServiceTest
+{
     @Mock
     MinioClient minioClient;
 
@@ -38,8 +38,8 @@ class StorageDocumentServiceTest {
     StorageDocumentService service;
 
     @Test
-    void shouldUploadDocument() throws Exception {
-
+    void shouldUploadDocument() throws Exception
+    {
         when(configuration.minioClient(any())).thenReturn(minioClient);
         when(properties.bucket()).thenReturn("academy-test");
         when(studentRepository.findById(any())).thenReturn(Optional.of(Student.create("Stefan", "Wegner", "Stefan@Wegner.com")));

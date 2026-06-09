@@ -7,17 +7,22 @@ import java.io.IOException;
 import java.io.InputStream;
 
 @Component
-public class AcademyInfoProvider {
+public class AcademyInfoProvider
+{
 
     private final AcademyInfo academyInfo;
 
-    public AcademyInfoProvider() throws IOException {
-        try (InputStream in = getClass().getClassLoader().getResourceAsStream("static/json/info.json")) {
+    public AcademyInfoProvider() throws IOException
+    {
+        try (InputStream in = getClass().getClassLoader()
+                .getResourceAsStream("static/json/info.json"))
+        {
             academyInfo = new ObjectMapper().readValue(in, AcademyInfo.class);
         }
     }
 
-    public AcademyInfo getAcademyInfo() {
+    public AcademyInfo getAcademyInfo()
+    {
         return academyInfo;
     }
 }

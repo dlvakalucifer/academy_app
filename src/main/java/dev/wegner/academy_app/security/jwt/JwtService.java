@@ -10,33 +10,53 @@ import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 @Service
-public class JwtService {
+public class JwtService
+{
 
     private final JwtProperties properties;
     private final SecretKey secretKey;
 
-    public JwtService(JwtProperties properties) {
+    public JwtService( JwtProperties properties )
+    {
         this.properties = properties;
-        this.secretKey = Keys.hmacShaKeyFor(properties.secret().getBytes(StandardCharsets.UTF_8));
+        this.secretKey = Keys.hmacShaKeyFor(properties.secret()
+                .getBytes(StandardCharsets.UTF_8));
     }
 
-    public String generateToken(String username) {
+    public String generateToken( String username )
+    {
         Date now = new Date();
         Date expiration = new Date(now.getTime() + properties.expirationMinutes() * 60_000);
 
-        return Jwts.builder().subject(username).issuedAt(now).expiration(expiration).signWith(secretKey).compact();
+        return Jwts.builder()
+                .subject(username)
+                .issuedAt(now)
+                .expiration(expiration)
+                .signWith(secretKey)
+                .compact();
     }
 
-    public String extractUsername(String token) {
-        Claims claims = Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload();
+    public String extractUsername( String token )
+    {
+        Claims claims = Jwts.parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
         return claims.getSubject();
     }
 
-    public boolean isValid(String token) {
-        try {
-            Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token);
+    public boolean isValid( String token )
+    {
+        try
+        {
+            Jwts.parser()
+                    .verifyWith(secretKey)
+                    .build()
+                    .parseSignedClaims(token);
             return true;
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             return false;
         }
     }

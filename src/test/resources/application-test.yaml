@@ -1,17 +1,13 @@
 spring:
-
   datasource:
     url: jdbc:postgresql://localhost:5432/academy_test
     username: academy
     password: academy
-
   jpa:
     hibernate:
       ddl-auto: create-drop
-
   cache:
     type: simple
-
 academy:
   #nur fürs Lernprojekt
   security:

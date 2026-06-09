@@ -4,10 +4,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class AcademyAppApplicationTests {
-
+class AcademyAppApplicationTests
+{
     @Test
-    void contextLoads() {
+    void contextLoads()
+    {
+        //Yes it does
     }
 
 }

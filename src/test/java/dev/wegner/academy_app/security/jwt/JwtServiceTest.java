@@ -4,40 +4,34 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class JwtServiceTest {
-
+public class JwtServiceTest
+{
     @Test
-    void shouldGenerateToken() {
-
-        JwtProperties properties = new JwtProperties("academy-super-secret-key-for-development-only", 60);
-
-        JwtService service = new JwtService(properties);
-
-        String token = service.generateToken("stefan");
+    void shouldGenerateToken()
+    {
+        var properties = new JwtProperties("academy-super-secret-key-for-development-only", 60);
+        var service = new JwtService(properties);
+        var token = service.generateToken("stefan");
 
         assertThat(token).isNotBlank();
     }
 
     @Test
-    void shouldExtractUsername() {
-
-        JwtProperties properties = new JwtProperties("academy-super-secret-key-for-development-only", 60);
-
-        JwtService service = new JwtService(properties);
-
-        String token = service.generateToken("stefan");
+    void shouldExtractUsername()
+    {
+        var properties = new JwtProperties("academy-super-secret-key-for-development-only", 60);
+        var service = new JwtService(properties);
+        var token = service.generateToken("stefan");
 
         assertThat(service.extractUsername(token)).isEqualTo("stefan");
     }
 
     @Test
-    void shouldValidateToken() {
-
-        JwtProperties properties = new JwtProperties("academy-super-secret-key-for-development-only", 60);
-
-        JwtService service = new JwtService(properties);
-
-        String token = service.generateToken("stefan");
+    void shouldValidateToken()
+    {
+        var properties = new JwtProperties("academy-super-secret-key-for-development-only", 60);
+        var service = new JwtService(properties);
+        var token = service.generateToken("stefan");
 
         assertThat(service.isValid(token)).isTrue();
     }

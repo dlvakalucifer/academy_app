@@ -21,34 +21,43 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @EnableConfigurationProperties(JwtProperties.class)
-public class SecurityConfiguration {
+public class SecurityConfiguration
+{
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    public SecurityConfiguration(JwtAuthenticationFilter jwtAuthenticationFilter) {
+    public SecurityConfiguration( JwtAuthenticationFilter jwtAuthenticationFilter )
+    {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    public PasswordEncoder passwordEncoder()
+    {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain securityFilterChain( HttpSecurity http )
+    {
         return http.csrf(AbstractHttpConfigurer::disable)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/login", "/actuator/health", "/info").permitAll()
-                        .requestMatchers("/students", "/students/**").hasAnyRole("ADMIN", "LECTURER")
-                        .requestMatchers("/storage", "/storage/**").hasAnyRole("ADMIN", "LECTURER")
-                        .anyRequest().authenticated())
-                .httpBasic(Customizer.withDefaults()).build();
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/auth/login", "/actuator/health", "/info")
+                        .permitAll()
+                        .requestMatchers("/students", "/students/**")
+                        .hasAnyRole("ADMIN", "LECTURER")
+                        .requestMatchers("/storage", "/storage/**")
+                        .hasAnyRole("ADMIN", "LECTURER")
+                        .anyRequest()
+                        .authenticated())
+                .httpBasic(Customizer.withDefaults())
+                .build();
     }
 
     @Bean
-    AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+    AuthenticationManager authenticationManager( AuthenticationConfiguration configuration )
+    {
         return configuration.getAuthenticationManager();
     }
 }
