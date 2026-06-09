@@ -1,0 +1,38 @@
+server:
+  port: 8081
+spring:
+  application:
+    name: academy_app
+  threads:
+    virtual:
+      enabled: true
+  datasource:
+    url: jdbc:postgresql://localhost:5432/academy
+    username: academy
+    password: academy
+  jpa:
+    hibernate:
+      ddl-auto: update
+  data:
+    redis:
+      host: localhost
+      port: 6379
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
+academy:
+  storage:
+    endpoint: http://localhost:9000
+    access-key: academy
+    secret-key: academy-storage-secret
+    bucket: academy-documents
+  #nur fürs Lernprojekt
+  security:
+    jwt:
+      secret: academy-super-secret-key-for-development-only
+      expiration-minutes: 60

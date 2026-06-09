@@ -1,0 +1,35 @@
+server:
+  port: 8081
+spring:
+  application:
+    name: academy_app
+  threads:
+    virtual:
+      enabled: true
+  datasource:
+    hikari:
+      initialization-fail-timeout: 60000
+    url: jdbc:postgresql://academy_db:5432/academy
+    username: academy
+    password: academy
+  jpa:
+    hibernate:
+      ddl-auto: update
+  data:
+    redis:
+      host: academy_cache
+      port: 6379
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
+academy:
+  storage:
+    endpoint: http://academy_storage:9000
+    access-key: academy
+    secret-key: academy-storage-secret
+    bucket: academy-documents

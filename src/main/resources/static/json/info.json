@@ -1,0 +1,9 @@
+{
+  "application": "academy_app",
+  "version": "1.0.0",
+  "java": "21",
+  "springBoot": "4",
+  "database": "PostgreSQL",
+  "storage": "MinIO",
+  "cache": "Redis"
+}
