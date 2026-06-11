@@ -43,7 +43,7 @@ public class SecurityConfiguration
         return http.csrf(AbstractHttpConfigurer::disable)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth -> auth.requestMatchers("/auth/login", "/actuator/health", "/info")
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/auth/login", "/actuator/health", "/actuator/prometheus", "/info")
                         .permitAll()
                         .requestMatchers("/students", "/students/**")
                         .hasAnyRole("ADMIN", "LECTURER")

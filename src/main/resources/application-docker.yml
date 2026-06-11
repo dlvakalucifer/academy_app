@@ -33,3 +33,7 @@ academy:
     access-key: academy
     secret-key: academy-storage-secret
     bucket: academy-documents
+  security:
+    jwt:
+      secret: academy-super-secret-key-for-development-only
+      expiration-minutes: 60

@@ -1,11 +1,15 @@
 package dev.wegner.academy_app.student;
 
+import dev.wegner.academy_app.security.jwt.JwtAuthenticationFilter;
+import dev.wegner.academy_app.security.jwt.JwtService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.cache.CacheManager;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import java.util.List;
 
@@ -15,8 +19,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(StudentController.class)
+@AutoConfigureMockMvc(addFilters = false)
 class StudentControllerTest
 {
+    @MockitoBean
+    JwtService jwtService;
+
+    @MockitoBean
+    JwtAuthenticationFilter jwtAuthenticationFilter;
+
     @MockitoBean
     private CacheManager cacheManager;
 
@@ -28,6 +39,9 @@ class StudentControllerTest
 
     @Autowired
     private MockMvc mvc;
+
+    @Autowired
+    RequestMappingHandlerMapping mappings;
 
     @Test
     void shouldReturnStudents() throws Exception

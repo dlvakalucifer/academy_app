@@ -1,9 +1,12 @@
 package dev.wegner.academy_app.security.auth;
 
 import dev.wegner.academy_app.security.SecurityConfiguration;
+import dev.wegner.academy_app.security.jwt.JwtAuthenticationFilter;
 import dev.wegner.academy_app.security.jwt.JwtService;
+import dev.wegner.academy_app.user_management.AcademyUserDetailsService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Import;
@@ -18,6 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(AuthenticationController.class)
+@AutoConfigureMockMvc(addFilters = false)
 @Import(SecurityConfiguration.class)
 class AuthenticationControllerTest
 {
@@ -29,6 +33,12 @@ class AuthenticationControllerTest
 
     @MockitoBean
     private JwtService jwtService;
+
+    @MockitoBean
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    @MockitoBean
+    AcademyUserDetailsService academyUserDetailsService;
 
     @Autowired
     private MockMvc mvc;

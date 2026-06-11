@@ -9,7 +9,6 @@ import java.io.InputStream;
 @Component
 public class AcademyInfoProvider
 {
-
     private final AcademyInfo academyInfo;
 
     public AcademyInfoProvider() throws IOException

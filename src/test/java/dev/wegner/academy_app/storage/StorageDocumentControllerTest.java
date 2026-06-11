@@ -1,5 +1,7 @@
 package dev.wegner.academy_app.storage;
 
+import dev.wegner.academy_app.security.jwt.JwtAuthenticationFilter;
+import dev.wegner.academy_app.security.jwt.JwtService;
 import dev.wegner.academy_app.student.Student;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(StorageDocumentController.class)
 class StorageDocumentControllerTest
 {
+    @MockitoBean
+    JwtService jwtService;
+
+    @MockitoBean
+    JwtAuthenticationFilter jwtAuthenticationFilter;
+
     @MockitoBean
     StorageDocumentService service;
 
