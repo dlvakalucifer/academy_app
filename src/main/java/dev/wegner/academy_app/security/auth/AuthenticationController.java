@@ -1,7 +1,9 @@
 package dev.wegner.academy_app.security.auth;
 
+import dev.wegner.academy_app.logging.LogCategories;
 import dev.wegner.academy_app.security.jwt.JwtService;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,13 +27,18 @@ public class AuthenticationController
     @PostMapping("/login")
     public LoginResponse login( @RequestBody LoginRequest request )
     {
+        try
+        {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.username(), request.password()));
 
-        System.out.println("LOGIN ENDPOINT AUFGERUFEN");
+            String token = jwtService.generateToken(request.username());
+            LogCategories.SECURITY.info("Token built successfully for user: {}", request.username());
 
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.username(), request.password()));
-
-        String token = jwtService.generateToken(request.username());
-
-        return new LoginResponse(token);
+            return new LoginResponse(token);
+        } catch (BadCredentialsException e)
+        {
+            LogCategories.SECURITY.info("Bad credentials {}", request.username());
+            throw new RuntimeException("Bad credentials", e);
+        }
     }
 }

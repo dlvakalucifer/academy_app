@@ -1,5 +1,6 @@
 package dev.wegner.academy_app.student;
 
+import dev.wegner.academy_app.logging.LogCategories;
 import jakarta.validation.Valid;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.web.bind.annotation.*;
@@ -10,7 +11,6 @@ import java.util.List;
 @RequestMapping("/students")
 public class StudentController
 {
-
     private final StudentRepository repository;
     private final StudentService service;
 
@@ -51,6 +51,8 @@ public class StudentController
     public StudentResponse create( @Valid @RequestBody CreateStudentRequest request )
     {
         var student = repository.save(Student.create(request.firstName(), request.lastName(), request.email()));
+        LogCategories.STUDENT.info("Student created: {}", student);
+
         return toResponse(student);
     }
 
