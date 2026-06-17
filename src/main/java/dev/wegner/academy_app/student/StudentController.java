@@ -1,70 +1,64 @@
 package dev.wegner.academy_app.student;
 
 import dev.wegner.academy_app.logging.LogCategories;
-import io.prometheus.metrics.core.metrics.Counter;
-import io.prometheus.metrics.model.registry.PrometheusRegistry;
 import jakarta.validation.Valid;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/students")
 public class StudentController
 {
-    private final StudentRepository repository;
     private final StudentService service;
+    private final StudentMetrics metrics;
 
-    private final Counter createdCounter;
 
-    public StudentController( StudentRepository repository, StudentService service,  PrometheusRegistry meterRegistry )
+    public StudentController( StudentService service, StudentMetrics metrics )
     {
-        this.repository = repository;
         this.service = service;
-
-        this.createdCounter = Counter.builder()
-                .name("academy.students.build")
-                .help("Academy Student Created Counter")
-                .register(meterRegistry);
+        this.metrics = metrics;
     }
 
     @GetMapping
-    public List<StudentResponse> findAll()
+    public Page<StudentResponse> findAll( Pageable pageable )
     {
-        return service.findAll()
-                .stream()
-                .map(this::toResponse)
-                .toList();
-    }
-
-    @GetMapping("/by-email")
-    public StudentResponse findByEmail( @RequestParam String email )
-    {
-        var student = repository.findByEmail(email)
-                .orElseThrow();
-
-        return toResponse(student);
+        return service.findAll(pageable)
+                .map(this::toResponse);
     }
 
     @GetMapping("/{id}")
     public StudentResponse findById( @PathVariable Long id )
     {
-        var student = repository.findById(id)
-                .orElseThrow();
+        return toResponse(service.findById(id));
+    }
+
+    @GetMapping("/by-email")
+    public StudentResponse findByEmail( @RequestParam String email )
+    {
+        return toResponse(service.findByEmail(email));
+    }
+
+    @PostMapping
+    @CacheEvict(value = "students", allEntries = true)
+    public StudentResponse create( @Valid @RequestBody CreateStudentRequest request )
+    {
+        var student = service.create(request);
+        metrics.studentCreated();
+        LogCategories.STUDENT.info("Student created: {}", student);
+
+
         return toResponse(student);
     }
 
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @CacheEvict(value = "students", allEntries = true)
-    @PostMapping
-    public StudentResponse create( @Valid @RequestBody CreateStudentRequest request )
+    public void delete( @PathVariable Long id )
     {
-        var student = repository.save(Student.create(request.firstName(), request.lastName(), request.email()));
-        LogCategories.STUDENT.info("Student created: {}", student);
-
-        createdCounter.inc();
-
-        return toResponse(student);
+        service.delete(id);
     }
 
     private StudentResponse toResponse( Student student )

@@ -1,12 +1,12 @@
 package dev.wegner.academy_app.student;
 
-import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
+import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.cache.CacheManager;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.testcontainers.containers.PostgreSQLContainer;
@@ -59,6 +59,19 @@ class StudentRepositoryTest
     }
 
     @Test
+    void shouldFindStudentById()
+    {
+        var saved = repository.save(
+                Student.create("Stefan", "Wegner", "Stefan@Wegner.com"));
+
+        var student = repository.findById(saved.getId());
+
+        assertThat(student).isPresent();
+        assertThat(student.get().getEmail())
+                .isEqualTo("Stefan@Wegner.com");
+    }
+
+    @Test
     void shouldFindStudentByEmail()
     {
         repository.save(Student.create("Stefan", "Wegner", "Stefan@Wegner.com"));
@@ -72,5 +85,47 @@ class StudentRepositoryTest
                 .getLastName()).isEqualTo("Wegner");
         assertThat(student.get()
                 .getEmail()).isEqualTo("Stefan@Wegner.com");
+    }
+
+    @Test
+    void shouldDeleteStudent()
+    {
+        var saved = repository.save(
+                Student.create("Stefan", "Wegner", "Stefan@Wegner.com"));
+
+        repository.deleteById(saved.getId());
+
+        assertThat(repository.findById(saved.getId()))
+                .isEmpty();
+    }
+
+    @Test
+    void shouldReturnStudentsPage()
+    {
+        repository.save(Student.create("Anna", "Foo", "anna@foo.com"));
+        repository.save(Student.create("Tom", "Bar", "tom@bar.com"));
+        repository.save(Student.create("Max", "Baz", "max@baz.com"));
+
+        var page = repository.findAll(PageRequest.of(0, 2));
+
+        assertThat(page.getContent())
+                .hasSize(2);
+
+        assertThat(page.getTotalElements())
+                .isEqualTo(3);
+    }
+
+    @Test
+    void shouldReturnSortedStudents()
+    {
+        repository.save(Student.create("Tom", "Bar", "tom@bar.com"));
+        repository.save(Student.create("Anna", "Foo", "anna@foo.com"));
+
+        var students = repository.findAll(
+                Sort.by("firstName"));
+
+        assertThat(students)
+                .extracting(Student::getFirstName)
+                .containsExactly("Anna", "Tom");
     }
 }
