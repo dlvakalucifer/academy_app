@@ -1,6 +1,8 @@
 package dev.wegner.academy_app.storage;
 
 import dev.wegner.academy_app.logging.LogCategories;
+import io.prometheus.metrics.core.metrics.Histogram;
+import io.prometheus.metrics.model.registry.PrometheusRegistry;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -17,10 +19,18 @@ public class StorageDocumentController
     private final StorageDocumentService storageDocumentService;
     private final StorageDocumentRepository storageDocumentRepository;
 
-    public StorageDocumentController( StorageDocumentService storageDocumentService, StorageDocumentRepository storageDocumentRepository )
+    private final Histogram uploadLatency;
+
+    public StorageDocumentController( StorageDocumentService storageDocumentService, StorageDocumentRepository storageDocumentRepository, PrometheusRegistry meterRegistry )
     {
         this.storageDocumentService = storageDocumentService;
         this.storageDocumentRepository = storageDocumentRepository;
+
+        uploadLatency = Histogram.builder()
+                .name("academy.storage.uploadLatency")
+                .help("Measures Time required for uploading byte stream data")
+                .register(meterRegistry);
+
     }
 
     @PostMapping(path = "/students/{studentId}/documents", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -28,7 +38,10 @@ public class StorageDocumentController
     {
         try
         {
+            long start = System.nanoTime();
             StorageDocument uploadedDocument = storageDocumentService.upload(studentId, file);
+            uploadLatency.observe(System.nanoTime() - start);
+
             LogCategories.STORAGE.info("Uploading student document {}", uploadedDocument);
 
             return new StorageDocumentResponse(uploadedDocument.getId(), uploadedDocument.getFileName(), uploadedDocument.getContentType(), uploadedDocument.getFileSize());

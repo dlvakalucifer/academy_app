@@ -1,6 +1,8 @@
 package dev.wegner.academy_app.student;
 
 import dev.wegner.academy_app.logging.LogCategories;
+import io.prometheus.metrics.core.metrics.Counter;
+import io.prometheus.metrics.model.registry.PrometheusRegistry;
 import jakarta.validation.Valid;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.web.bind.annotation.*;
@@ -14,10 +16,17 @@ public class StudentController
     private final StudentRepository repository;
     private final StudentService service;
 
-    public StudentController( StudentRepository repository, StudentService service )
+    private final Counter createdCounter;
+
+    public StudentController( StudentRepository repository, StudentService service,  PrometheusRegistry meterRegistry )
     {
         this.repository = repository;
         this.service = service;
+
+        this.createdCounter = Counter.builder()
+                .name("academy.students.build")
+                .help("Academy Student Created Counter")
+                .register(meterRegistry);
     }
 
     @GetMapping
@@ -52,6 +61,8 @@ public class StudentController
     {
         var student = repository.save(Student.create(request.firstName(), request.lastName(), request.email()));
         LogCategories.STUDENT.info("Student created: {}", student);
+
+        createdCounter.inc();
 
         return toResponse(student);
     }
