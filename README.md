@@ -1,6 +1,16 @@
 ## Docker Container bauen (quick)
 
+```bash
 ./gradlew clean bootJar && docker build -t academy-app:1.0 .
+```
+
+### System hoch- und runterfahren
+Im rootDir des Projekts
+```bash
+docker compose up -d
+docker compose down
+lazydocker
+```
 
 ## Schnell einen Studentin anlegen
 
@@ -11,6 +21,15 @@ TOKEN=$(curl -s -X POST http://localhost:8081/auth/login \
   -H "Content-Type: application/json" \
   -d '{"username":"lecturer","password":"academy"}' \
   | jq -r '.token')
+```
+
+### Alle vorhandenen Studenten einsehen
+
+```bash
+curl \                               
+  -H "Authorization: Bearer $TOKEN" \
+  "http://localhost:8081/students?page=0&size=10&sort=lastName" \
+  | jq
 ```
 
 ### Student anlegen
@@ -25,3 +44,14 @@ curl -X POST http://localhost:8081/students \
         "email":"wegner.wegner@example.com"
       }'
 ```
+---
+
+## Cloud-Sationen besuchen
+
+| Station    | Adresse                            |
+|------------|------------------------------------|
+| pgadmin    | http://localhost:8080/login?next=/ |
+| minio      | http://localhost:9001/login        |
+| prometheus | http://localhost:9090/query        |
+| grafana    | http://localhost:3000/login        |
+| mail       | http://localhost:8025/             |
