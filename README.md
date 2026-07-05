@@ -1,5 +1,10 @@
 ## Docker Container bauen (quick)
 
+- WSL hochgefahren?
+- Docker Desktop hochgefahren?
+- andere App auf 8080 runtergefahren?
+- `dev` Profile vom Browser offen?
+
 ```bash
 ./gradlew clean bootJar && docker build -t academy-app:1.0 .
 ```
